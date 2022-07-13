@@ -1,4 +1,4 @@
-function frequentWords(text) {
+function frequentWords(text, frequentWordsNumber = 3) {
   let newArr = text.split(' ').filter(i => i != '')
   let letters = [
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 
@@ -28,17 +28,17 @@ function frequentWords(text) {
     else words[newArr[i]] = 1
   }
 
-  let frequentWords = []
+  let frequentWordsMap = new Map()
   let wordsMap
   if (Object.keys(words).length >= 3) {
-    for (let j = 0; j < 3; j++) {
+    for (let j = 0; j < frequentWordsNumber; j++) {
       let max = -1;
       let index = -1
       wordsMap = Object.entries(words)
       for (let i in wordsMap) {
         if (wordsMap[i][1] > max) { max = wordsMap[i][1]; index = i }
       }
-      frequentWords.push(wordsMap[index][0])
+      frequentWordsMap.set(wordsMap[index][0], max)
       delete words[wordsMap[index][0]]
     }
   } else if (Object.keys(words).length == 2) {
@@ -49,9 +49,12 @@ function frequentWords(text) {
       for (let i in wordsMap) {
         if (wordsMap[i][1] > max) { max = wordsMap[i][1]; index = i }
       }
-      frequentWords.push(wordsMap[index][0])
+      frequentWordsMap.set(wordsMap[index][0], max)
       delete words[wordsMap[index][0]]
     }
-  } else if (Object.keys(words).length == 1) frequentWords.push(newArr[0])
-  return frequentWords
+  } else if (Object.keys(words).length == 1) {
+    wordsMap = Object.entries(words)
+    frequentWordsMap.set(wordsMap[0][0], wordsMap[0][1])
+  }
+  return frequentWordsMap
 }
